@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+
+	<command>
+		<name>DOWNLOAD_FILE</name>
+		<realization>com.shatskiy.repository.controller.command.impl.DownloadFile</realization>
+	</command>
+	<command>
+		<name>SHOW_REPOSITORY_JSON</name>
+		<realization>com.shatskiy.repository.controller.command.impl.ShowRepositoryJSON</realization>
+	</command>
+	<command>
+		<name>BACK_SHOW_REPOSITORY_JSON</name>
+		<realization>com.shatskiy.repository.controller.command.impl.BackShowRepositoryJSON</realization>
+	</command>
+
+</commands>
