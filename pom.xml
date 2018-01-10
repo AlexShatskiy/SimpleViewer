@@ -4,22 +4,41 @@
   <groupId>com.shatskiy.repository</groupId>
   <artifactId>Repository</artifactId>
   <packaging>war</packaging>
-  <version>2.8</version>
+  <version>3.0</version>
   <name>Repository Maven Webapp</name>
   <url>http://maven.apache.org</url>
+
+  <properties>
+
+    <!-- for plugins -->
+    <jdk.version>1.8</jdk.version>
+    <compiler.version>3.3</compiler.version>
+    <war.plagin.version>2.6</war.plagin.version>
+
+    <!-- for dependencies -->
+    <junit.version>4.12</junit.version>
+    <servletapi.version>3.1.0</servletapi.version>
+    <jstl.version>1.2</jstl.version>
+    <log4j.version>1.2.17</log4j.version>
+    <jsonorg.version>20160810</jsonorg.version>
+    <spring.version>4.2.2.RELEASE</spring.version>
+    <spring.security.version>3.2.3.RELEASE</spring.security.version>
+
+  </properties>
+
   <dependencies>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <version>${servletapi.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -27,21 +46,59 @@
     <dependency>
       <groupId>jstl</groupId>
       <artifactId>jstl</artifactId>
-      <version>1.2</version>
+      <version>${jstl.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/log4j/log4j -->
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <version>${log4j.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.json/json -->
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20160810</version>
+      <version>${jsonorg.version}</version>
+    </dependency>
+
+    <!-- Spring 3 dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Spring Security -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <version>${spring.security.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>${spring.security.version}</version>
     </dependency>
 
   </dependencies>
@@ -51,12 +108,23 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
+        <version>${compiler.version}</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
         </configuration>
       </plugin>
+
+      <!-- for build war without web.xml-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${war.plagin.version}</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 </project>

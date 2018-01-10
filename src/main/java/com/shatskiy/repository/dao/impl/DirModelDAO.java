@@ -7,7 +7,10 @@ import com.shatskiy.repository.model.FileModelPOJO;
 import com.shatskiy.repository.service.exception.ServiceException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
@@ -21,12 +24,18 @@ import java.util.*;
  * @author Shatskiy Alex
  * @version 1.0
  */
+@Repository("DirModelDAO")
 public class DirModelDAO implements ModelDAO {
 
     private static final Logger log = LogManager.getRootLogger();
+    private static final String ENCODING_TYPE = "UTF-8";
+    private static final String DECODING_TYPE = "ISO8859_1";
+    private static final String MIME_TYPE = "application/octet-stream";
+    private static final String HEADER = "Content-Disposition";
 
     /**
      * return set all FileModelPOJO in path
+     *
      * @param path
      * @return set of FileModelPOJO
      * @throws ServiceException
@@ -49,49 +58,44 @@ public class DirModelDAO implements ModelDAO {
 
     /**
      * download file
-     * @param path full path for file
+     *
+     * @param path     full path for file
      * @param response
      * @throws ServiceException
      */
     @Override
     public void downloadFile(String path, HttpServletResponse response) throws DaoException {
-
-        File file = new File(path);
         String fileName;
         String mimeType;
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/octet-stream");
-        response.setContentLength((int) file.length());
+        File file = new File(path);
 
-        log.info("DirModelDAO.downloadFile, file == null:" + (file == null));
+        try(InputStream inputStream = new FileInputStream(file);
+            ServletOutputStream outputStream = response.getOutputStream()) {
 
-        try (FileInputStream in = new FileInputStream(file);
-             OutputStream out = response.getOutputStream()) {
+            //encoding and decoding file name (for russian and other simbols)
+            fileName = URLEncoder.encode(file.getName(), ENCODING_TYPE);
+            fileName = URLDecoder.decode(fileName, DECODING_TYPE);
+            log.info("File file == null" + (file == null));
 
-            fileName = URLEncoder.encode(file.getName(), "UTF-8");
-            fileName = URLDecoder.decode(fileName, "ISO8859_1");
             Path pathForMimeType = FileSystems.getDefault().getPath(path);
             mimeType = Files.probeContentType(pathForMimeType);
-            log.info("mime type=" + mimeType);
-            if(mimeType != null){
-                response.setContentType(mimeType);
-            }
-            log.info("response.setHeader(..), filename=" + fileName);
-            response.setHeader( "Content-Disposition", "attachment; filename=" + fileName);
 
-            byte[] buffer = new byte[4096];
-            int length;
-            log.info("out.write(buffer, 0, length); start");
-            while ((length = in.read(buffer)) > 0) {
-                out.write(buffer, 0, length);
+            response.setContentType(mimeType != null ? mimeType : MIME_TYPE);
+            response.setContentLength((int) file.length());
+            response.setHeader(HEADER, "attachment; filename=\"" + fileName + "\"");
+
+            byte[] bufferData = new byte[1024];
+            int read = 0;
+            while ((read = inputStream.read(bufferData)) != -1) {
+                outputStream.write(bufferData, 0, read);
             }
-            log.info("out.write(buffer, 0, length); finish");
-            out.flush();
-            log.info("out.flush(); finish");
+            outputStream.flush();
+
+            log.info("outputStream.flush()");
         } catch (IOException e) {
             log.error(e);
-            throw new DaoException("fail in downloadFile", e);
+            throw new DaoException(e);
         }
     }
 }

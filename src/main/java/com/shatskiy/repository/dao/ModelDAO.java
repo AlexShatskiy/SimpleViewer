@@ -5,7 +5,6 @@ import com.shatskiy.repository.model.FileModelPOJO;
 import com.shatskiy.repository.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Comparator;
 import java.util.Set;
 
 /**

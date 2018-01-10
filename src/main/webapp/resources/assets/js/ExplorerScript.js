@@ -17,10 +17,9 @@ function loadFileAndFolders(nameFolder, switchPath){
     $("#mainTable").find("tr:gt(0)").remove();
     $.ajax({
         type : "POST",
-        url : "controller",
+        url : "admin/viewRepository",
         dataType:'json',
-        data:{"command":"SHOW_REPOSITORY_JSON",
-            "nameFolder":nameFolder,
+        data:{"nameFolder":nameFolder,
             "switchPath":switchPath
         },
         success : function(data) {
@@ -42,7 +41,7 @@ function addToMainTable(received) {
             var td1="<td><span class=\"glyphicon glyphicon-folder-open\">  "+received[i].fileName+"</span></td>";
         } else {
             var tr = "<tr class=\"file\">";
-            var td1="<td><a href=\"download?fileName=" + received[i].fileName + "\" download>\<span class=\"glyphicon glyphicon-file\">  "+received[i].fileName+"</a></span></td>";
+            var td1="<td><a href=\"admin/download?fileName=" + received[i].fileName + "\" download>\<span class=\"glyphicon glyphicon-file\">  "+received[i].fileName+"</a></span></td>";
         }
         var td2="<td>"+received[i].sizeModel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+"</td></tr>";
 

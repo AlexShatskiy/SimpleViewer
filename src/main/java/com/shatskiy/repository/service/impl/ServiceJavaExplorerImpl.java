@@ -2,7 +2,6 @@ package com.shatskiy.repository.service.impl;
 
 import com.shatskiy.repository.dao.ModelDAO;
 import com.shatskiy.repository.dao.exception.DaoException;
-import com.shatskiy.repository.dao.factory.DAOFactory;
 import com.shatskiy.repository.dao.manager.PathPropertiesParameter;
 import com.shatskiy.repository.dao.manager.PathPropertiesResourceManager;
 import com.shatskiy.repository.model.FileModelPOJO;
@@ -10,6 +9,9 @@ import com.shatskiy.repository.service.ServiceJavaExplorer;
 import com.shatskiy.repository.service.exception.ServiceException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,9 +21,14 @@ import java.util.Set;
  * @author Shatskiy Alex
  * @version 1.0
  */
+@Service("ServiceJavaExplorer")
 public class ServiceJavaExplorerImpl implements ServiceJavaExplorer {
 
     private static final Logger log = LogManager.getRootLogger();
+
+    @Autowired
+    @Qualifier("DirModelDAO")
+    private ModelDAO modelDAO;
 
     //initial path
     private static String ROOT_PATH = PathPropertiesResourceManager.getInstance().getValue(PathPropertiesParameter.FOLDER_PATH);
@@ -37,9 +44,6 @@ public class ServiceJavaExplorerImpl implements ServiceJavaExplorer {
 
         Set<FileModelPOJO> set;
         String passForDAO;
-
-        DAOFactory factory = DAOFactory.getInstance();
-        ModelDAO modelDAO = factory.getModelDAO();
 
         if (path == null){
             passForDAO = ROOT_PATH;
@@ -65,9 +69,6 @@ public class ServiceJavaExplorerImpl implements ServiceJavaExplorer {
      */
     @Override
     public void downloadFile(String path, HttpServletResponse response) throws ServiceException {
-
-        DAOFactory factory = DAOFactory.getInstance();
-        ModelDAO modelDAO = factory.getModelDAO();
 
         log.info("ServiceJavaExplorerImpl.downloadFile(String path, HttpServletResponse response)");
         if (path != null){
