@@ -4,7 +4,7 @@
   <groupId>com.shatskiy.repository</groupId>
   <artifactId>Repository</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>2.8</version>
   <name>Repository Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -43,8 +43,6 @@
       <artifactId>json</artifactId>
       <version>20160810</version>
     </dependency>
-
-
 
   </dependencies>
   <build>

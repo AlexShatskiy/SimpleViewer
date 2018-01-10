@@ -3,23 +3,37 @@ package com.shatskiy.repository.service.impl;
 import com.shatskiy.repository.dao.ModelDAO;
 import com.shatskiy.repository.dao.exception.DaoException;
 import com.shatskiy.repository.dao.factory.DAOFactory;
-import com.shatskiy.repository.dao.manager.PassPropertiesParameter;
-import com.shatskiy.repository.dao.manager.PassPropertiesResourceManager;
+import com.shatskiy.repository.dao.manager.PathPropertiesParameter;
+import com.shatskiy.repository.dao.manager.PathPropertiesResourceManager;
 import com.shatskiy.repository.model.FileModelPOJO;
 import com.shatskiy.repository.service.ServiceJavaExplorer;
 import com.shatskiy.repository.service.exception.ServiceException;
-import com.shatskiy.repository.service.sort.SortByName;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
+/**
+ * @author Shatskiy Alex
+ * @version 1.0
+ */
 public class ServiceJavaExplorerImpl implements ServiceJavaExplorer {
 
-    private static String ROOT_PASS = PassPropertiesResourceManager.getInstance().getValue(PassPropertiesParameter.FOLDER_PATH);
+    private static final Logger log = LogManager.getRootLogger();
 
+    //initial path
+    private static String ROOT_PATH = PathPropertiesResourceManager.getInstance().getValue(PathPropertiesParameter.FOLDER_PATH);
+
+    /**
+     * return set all FileModelPOJO in path
+     * @param path
+     * @return set of FileModelPOJO
+     * @throws ServiceException
+     */
     @Override
-    public Set<FileModelPOJO> getListFileModel(String pass) throws ServiceException {
+    public Set<FileModelPOJO> getListFileModel(String path) throws ServiceException {
 
         Set<FileModelPOJO> set;
         String passForDAO;
@@ -27,38 +41,51 @@ public class ServiceJavaExplorerImpl implements ServiceJavaExplorer {
         DAOFactory factory = DAOFactory.getInstance();
         ModelDAO modelDAO = factory.getModelDAO();
 
-        if (pass == null){
-            passForDAO = ROOT_PASS;
+        if (path == null){
+            passForDAO = ROOT_PATH;
         } else {
-            if (pass.startsWith(ROOT_PASS)){
-                passForDAO = pass;
+            if (path.startsWith(ROOT_PATH)){
+                passForDAO = path;
             } else {
-                throw new ServiceException("Wrong pass. Are you a hacker?");
+                log.info("ServiceException(\"Wrong path. Are you a hacker?\")");
+                throw new ServiceException("Wrong path. Are you a hacker?");
             }
         }
+        log.info("ServiceJavaExplorerImpl.getListFileModel(..)");
         set = modelDAO.getSetFileModelPOJO(passForDAO);
 
         return set;
     }
 
+    /**
+     * download file
+     * @param path full path for file
+     * @param response
+     * @throws ServiceException
+     */
     @Override
-    public void downloadFile(String pass, HttpServletResponse response) throws ServiceException {
+    public void downloadFile(String path, HttpServletResponse response) throws ServiceException {
 
         DAOFactory factory = DAOFactory.getInstance();
         ModelDAO modelDAO = factory.getModelDAO();
 
-        if (pass != null){
+        log.info("ServiceJavaExplorerImpl.downloadFile(String path, HttpServletResponse response)");
+        if (path != null){
             try {
-                if (pass.startsWith(ROOT_PASS)){
-                    modelDAO.downloadFile(pass, response);
+                if (path.startsWith(ROOT_PATH)){
+                    log.info("ServiceJavaExplorerImpl.downloadFile(String path, HttpServletResponse response); path.startsWith(ROOT_PATH)");
+                    modelDAO.downloadFile(path, response);
                 } else {
-                    throw new ServiceException("Wrong pass. Are you a hacker?");
+                    log.info("fail:  ServiceJavaExplorerImpl.downloadFile(..); ServiceException(\"Wrong path. Are you a hacker?\")");
+                    throw new ServiceException("Wrong path. Are you a hacker?");
                 }
             } catch (DaoException e) {
-                throw new ServiceException("fail in downloadFile", e);
+                log.error(e);
+                throw new ServiceException("fail:  fail in downloadFile", e);
             }
         } else {
-            throw new ServiceException("pass == null");
+            log.info("fail:  ServiceJavaExplorerImpl.downloadFile(..); path = null");
+            throw new ServiceException("path = null");
         }
     }
 }

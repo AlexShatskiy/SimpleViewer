@@ -6,18 +6,18 @@ import java.util.ResourceBundle;
  * @author Shatskiy Alex
  * @version 1.0
  */
-public class PassPropertiesResourceManager {
+public class PathPropertiesResourceManager {
 	
 	private static final String FILE_NAME = "folder";
 	
-	private static PassPropertiesResourceManager instance = null;
+	private static PathPropertiesResourceManager instance = null;
 	private final ResourceBundle bundle = ResourceBundle.getBundle(FILE_NAME);
 	
-	private PassPropertiesResourceManager() {}
+	private PathPropertiesResourceManager() {}
 
-	public static PassPropertiesResourceManager getInstance() {
+	public static PathPropertiesResourceManager getInstance() {
 		if(instance == null){
-			instance = new PassPropertiesResourceManager();
+			instance = new PathPropertiesResourceManager();
 		}
 		return instance;
 	}

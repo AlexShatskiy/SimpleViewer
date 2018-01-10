@@ -8,6 +8,11 @@ import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 
+/**
+ * It sort FileModelPOJO by name
+ * @author Shatskiy Alex
+ * @version 1.0
+ */
 public class SortByName implements Comparator<FileModelPOJO> {
 
     @Override
@@ -18,5 +23,4 @@ public class SortByName implements Comparator<FileModelPOJO> {
 
         return str1.compareTo(str2);
     }
-
 }

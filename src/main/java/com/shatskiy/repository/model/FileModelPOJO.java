@@ -2,6 +2,11 @@ package com.shatskiy.repository.model;
 
 import java.math.BigInteger;
 
+/**
+ * It is model file or folder
+ * @author Shatskiy Alex
+ * @version 1.0
+ */
 public class FileModelPOJO {
 
     private String fileName;

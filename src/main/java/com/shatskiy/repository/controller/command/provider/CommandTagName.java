@@ -1,4 +1,4 @@
-package com.shatskiy.repository.controller.command.parameter;
+package com.shatskiy.repository.controller.command.provider;
 
 /**
  * command names in XML file

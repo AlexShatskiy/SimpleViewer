@@ -2,7 +2,6 @@ package com.shatskiy.repository.controller.command.provider;
 
 
 import com.shatskiy.repository.controller.command.Command;
-import com.shatskiy.repository.controller.command.parameter.CommandTagName;
 import com.shatskiy.repository.controller.exception.ControllerException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -15,10 +14,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * @author Shatskiy Alex
  * @version 1.0
+ * It loads commands from XML file
  */
 public class CommandProviderXML {
 	
@@ -100,7 +99,7 @@ public class CommandProviderXML {
 			command = (Command) c.newInstance();
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			log.error(e);
-			throw new ControllerException("fail in commandCreator(String text)", e);
+			throw new ControllerException("fail in commandCreator()", e);
 		}
 		return command;
 	}

@@ -6,20 +6,18 @@ import org.json.JSONObject;
 
 import java.util.Set;
 
+/**
+ * @author Shatskiy Alex
+ * @version 1.0
+ */
 public class ConverterJSON {
 
-    public static String convertSetToStringJSON(Set<FileModelPOJO> set){
-
-        String result;
-        JSONArray arrayObj=new JSONArray();
-
-        putInJSONArray(set, arrayObj);
-
-        result = arrayObj.toString();
-
-        return result;
-    }
-
+    /**
+     * convert two sets to one JSON string
+     * @param setFolder set of folders
+     * @param setFile set of files
+     * @return JSON String
+     */
     public static String convertSetToStringJSON(Set<FileModelPOJO> setFolder, Set<FileModelPOJO> setFile){
 
         String result;
@@ -33,6 +31,12 @@ public class ConverterJSON {
         return result;
     }
 
+    /**
+     * It put set to JSON array
+     * @param set
+     * @param arrayObj JSON array
+     * @return put JSON array
+     */
     private static JSONArray putInJSONArray(Set<FileModelPOJO> set, JSONArray arrayObj){
 
         for (FileModelPOJO model : set){
@@ -40,13 +44,11 @@ public class ConverterJSON {
 
             object.put("fileName", model.getFileName());
             object.put("isDirectory", model.getDirectory());
-            object.put("fullPath", model.getFullPath());
             object.put("parentFileName", model.getParentFileName());
             object.put("sizeModel", model.getSize());
 
             arrayObj.put(object);
         }
-
         return arrayObj;
     }
 }
